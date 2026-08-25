@@ -1,0 +1,304 @@
+:root {
+  font-synthesis: none;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  margin: 0;
+  min-width: 320px;
+}
+
+a {
+  color: inherit;
+}
+
+.app-shell {
+  min-height: 100vh;
+  background:
+    radial-gradient(circle at 90% -10%, rgba(51, 88, 212, 0.1), transparent 26rem),
+    #f5f7fb;
+}
+
+.topbar.MuiAppBar-root {
+  color: #172033;
+  background: rgba(255, 255, 255, 0.92);
+  border-bottom: 1px solid #e5e9f2;
+  backdrop-filter: blur(12px);
+}
+
+.toolbar {
+  min-height: 68px !important;
+  justify-content: space-between;
+}
+
+.brand {
+  color: inherit;
+  text-decoration: none;
+}
+
+.brand-mark {
+  width: 36px;
+  height: 36px;
+  display: grid;
+  place-items: center;
+  color: #fff;
+  background: #3358d4;
+  border-radius: 10px;
+  box-shadow: 0 5px 14px rgba(51, 88, 212, 0.25);
+}
+
+.brand-caption {
+  color: #7a8498;
+}
+
+.environment {
+  padding: 6px 11px;
+  color: #526079;
+  background: #f1f3f8;
+  border-radius: 8px;
+}
+
+.main-content {
+  padding-top: 44px;
+  padding-bottom: 64px;
+}
+
+.page-heading,
+.detail-heading {
+  display: flex;
+  align-items: flex-end;
+  justify-content: space-between;
+  gap: 24px;
+}
+
+.count-chip.MuiChip-root {
+  color: #31405e;
+  background: #e9edfb;
+}
+
+.content-card,
+.section-card,
+.address-card,
+.empty-addresses {
+  border-color: #e1e6ef !important;
+  box-shadow: 0 10px 35px rgba(20, 32, 58, 0.045);
+}
+
+.content-card {
+  overflow: hidden;
+}
+
+.table-toolbar {
+  width: min(440px, 100%);
+  padding: 20px 24px;
+}
+
+.table-toolbar .MuiOutlinedInput-root {
+  background: #f8f9fc;
+}
+
+.desktop-table .MuiTableCell-head {
+  color: #68738a;
+  background: #fafbfc;
+  border-top: 1px solid #edf0f5;
+  font-size: 0.76rem;
+  font-weight: 750;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.desktop-table .MuiTableCell-root {
+  padding: 18px 24px;
+  border-bottom-color: #edf0f5;
+}
+
+.desktop-table .MuiTableRow-root:last-child .MuiTableCell-root {
+  border-bottom: 0;
+}
+
+.user-avatar.MuiAvatar-root {
+  width: 42px;
+  height: 42px;
+  color: #3358d4;
+  background: #e9edfb;
+  font-size: 0.9rem;
+  font-weight: 750;
+}
+
+.mobile-users {
+  display: none !important;
+}
+
+.mobile-user-row {
+  padding: 20px;
+}
+
+.mobile-divider {
+  height: 1px;
+  background: #edf0f5;
+}
+
+.center-state {
+  min-height: 45vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  text-align: center;
+}
+
+.center-state.compact {
+  min-height: 280px;
+  padding: 32px;
+}
+
+.center-state.page-state {
+  min-height: calc(100vh - 210px);
+}
+
+.empty-icon {
+  color: #98a2b4;
+  font-size: 42px !important;
+}
+
+.section-card {
+  overflow: hidden;
+}
+
+.section-header,
+.section-body {
+  padding: 24px 28px;
+}
+
+.profile-summary {
+  display: grid !important;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.detail-icon {
+  width: 42px;
+  height: 42px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #526079;
+  background: #f0f3f8;
+  border-radius: 10px;
+}
+
+.detail-icon svg {
+  font-size: 21px;
+}
+
+.profile-grid,
+.address-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.profile-email {
+  grid-column: 1 / -1;
+}
+
+.address-card {
+  padding: 24px;
+}
+
+.address-card.editing {
+  border-color: #aebcf3 !important;
+  box-shadow: 0 10px 35px rgba(51, 88, 212, 0.08);
+}
+
+.address-icon {
+  color: #3358d4;
+  background: #edf0fc;
+}
+
+.address-label.MuiChip-root {
+  height: 24px;
+  color: #31405e;
+  background: #eef1f7;
+  font-weight: 700;
+}
+
+.editor-form {
+  max-width: 800px;
+}
+
+.empty-addresses {
+  min-height: 270px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 32px;
+  text-align: center;
+}
+
+.break-word {
+  overflow-wrap: anywhere;
+}
+
+@media (max-width: 700px) {
+  .main-content {
+    padding-top: 28px;
+    padding-bottom: 40px;
+  }
+
+  .environment {
+    display: none;
+  }
+
+  .page-heading,
+  .detail-heading {
+    align-items: flex-start;
+    flex-direction: column;
+  }
+
+  .detail-heading > .MuiButton-root {
+    order: -1;
+    margin-left: -8px;
+  }
+
+  .table-toolbar {
+    box-sizing: border-box;
+    padding: 16px;
+  }
+
+  .desktop-table {
+    display: none;
+  }
+
+  .mobile-users {
+    display: flex !important;
+    border-top: 1px solid #edf0f5;
+  }
+
+  .section-header,
+  .section-body,
+  .address-card {
+    padding: 20px;
+  }
+
+  .profile-summary {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-grid,
+  .address-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .profile-email {
+    grid-column: auto;
+  }
+}
+
+@media (max-width: 380px) {
+  .brand-caption {
+    display: none;
+  }
+}
