@@ -19,7 +19,7 @@ public class UserController {
     }
 
     //========== CRUD for user ==========
-    @GetMapping("/")
+    @GetMapping()
     public List<UserModel> index() {
         return userService.findAll();
     }
@@ -29,7 +29,7 @@ public class UserController {
         return userService.findById(id);
     }
 
-    @PostMapping("/")
+    @PostMapping()
     public UserModel createUser(@RequestBody UserModel user) {
         return userService.create(user);
     }
