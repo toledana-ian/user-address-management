@@ -10,7 +10,7 @@ pre-push:
 
     - name: web prettier
       root: apps/web
-      run: bunx prettier --check .
+      run: bun run format:check
 
     - name: web build
       root: apps/web
