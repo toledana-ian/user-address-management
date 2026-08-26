@@ -1,5 +1,7 @@
 package com.christiantoledana.api.user;
 
+import com.christiantoledana.api.address.AddressModel;
+import com.christiantoledana.api.address.AddressService;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
@@ -9,9 +11,11 @@ import java.util.List;
 public class UserController {
 
     private final UserService userService;
+    private final AddressService addressService;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, AddressService addressService) {
         this.userService = userService;
+        this.addressService = addressService;
     }
 
     //========== CRUD for user ==========
@@ -47,8 +51,8 @@ public class UserController {
     }
 
     @PostMapping("/{userId}/addresses")
-    public String createUserAddress(@PathVariable Long userId) {
-        return "create user "+userId+" address ";
+    public AddressModel createUserAddress(@PathVariable Long userId, @RequestBody AddressModel address) {
+        return addressService.create(userId, address);
     }
 
     @PatchMapping("/{userId}/addresses/{id}")
@@ -62,8 +66,8 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/addresses/{id}/primary")
-    public String setPrimaryUserAddress(@PathVariable Long userId, @PathVariable Long id) {
-        return "set user "+userId+" address "+id+" as primary";
+    public AddressModel setPrimaryUserAddress(@PathVariable Long userId, @PathVariable Long id) {
+        return addressService.setPrimary(userId, id);
     }
 
 }

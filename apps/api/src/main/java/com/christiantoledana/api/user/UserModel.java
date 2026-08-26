@@ -59,6 +59,6 @@ public class UserModel {
     }
 
     public void setAddresses(List<AddressModel> addresses) {
-        this.addresses = addresses;
+        this.addresses = new ArrayList<>(addresses);
     }
 }
