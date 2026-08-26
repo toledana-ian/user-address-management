@@ -1,5 +1,7 @@
 package com.christiantoledana.api.address;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+
 public class AddressModel {
     private Long id;
     private String label;
@@ -9,6 +11,10 @@ public class AddressModel {
     private String postalCode;
     private String country;
     private boolean primary;
+
+    @JsonCreator
+    public AddressModel() {
+    }
 
     public AddressModel(Long id, String label, String street, String city, String state,
                    String postalCode, String country, boolean primary) {
