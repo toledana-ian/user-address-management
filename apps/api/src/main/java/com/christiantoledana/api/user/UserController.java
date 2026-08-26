@@ -46,8 +46,8 @@ public class UserController {
 
     //========== CRUD for user's address ==========
     @GetMapping("/{userId}/addresses")
-    public String getUserAddresses(@PathVariable Long userId) {
-        return "user "+userId+" list of addresses ";
+    public List<AddressModel> getUserAddresses(@PathVariable Long userId) {
+        return addressService.findAllForUser(userId);
     }
 
     @PostMapping("/{userId}/addresses")
@@ -56,13 +56,13 @@ public class UserController {
     }
 
     @PatchMapping("/{userId}/addresses/{id}")
-    public String updateUserAddress(@PathVariable Long userId, @PathVariable Long id) {
-        return "update user "+userId+" address "+id;
+    public AddressModel updateUserAddress(@PathVariable Long userId, @PathVariable Long id, @RequestBody AddressModel address) {
+        return addressService.update(userId, id, address);
     }
 
     @DeleteMapping("/{userId}/addresses/{id}")
-    public String deleteUserAddress(@PathVariable Long userId, @PathVariable Long id) {
-        return "delete user "+userId+" address "+id;
+    public void deleteUserAddress(@PathVariable Long userId, @PathVariable Long id) {
+        addressService.delete(userId, id);
     }
 
     @PatchMapping("/{userId}/addresses/{id}/primary")
