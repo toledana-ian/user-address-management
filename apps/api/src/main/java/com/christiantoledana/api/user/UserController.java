@@ -52,5 +52,10 @@ public class UserController {
         return "delete user "+userId+" address "+id;
     }
 
+    @PatchMapping("/{userId}/addresses/{id}/primary")
+    public String setPrimaryUserAddress(@PathVariable Long userId, @PathVariable Long id) {
+        return "set user "+userId+" address "+id+" as primary";
+    }
+
 }
 
