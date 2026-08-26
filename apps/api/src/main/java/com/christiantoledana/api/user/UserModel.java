@@ -12,6 +12,9 @@ public class UserModel {
     private String lastName;
     private List<AddressModel> addresses = new ArrayList<>();
 
+    public UserModel() {
+    }
+
     public UserModel(Long id, String email, String firstName, String lastName) {
         this.id = id;
         this.email = email;

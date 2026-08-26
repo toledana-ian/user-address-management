@@ -2,33 +2,42 @@ package com.christiantoledana.api.user;
 
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 @RestController
 @RequestMapping("/users")
 public class UserController {
+
+    private final UserService userService;
+
+    public UserController(UserService userService) {
+        this.userService = userService;
+    }
+
     //========== CRUD for user ==========
     @GetMapping("/")
-    public String index() {
-        return "List of users";
+    public List<UserModel> index() {
+        return userService.findAll();
     }
 
     @GetMapping("/{id}")
-    public String getUser(@PathVariable Long id) {
-        return "user info of "+id;
+    public UserModel getUser(@PathVariable Long id) {
+        return userService.findById(id);
     }
 
-    @PostMapping("/{id}")
-    public String createUser(@PathVariable Long id) {
-        return "create user "+id;
+    @PostMapping("/")
+    public UserModel createUser(@RequestBody UserModel user) {
+        return userService.create(user);
     }
 
     @PatchMapping("/{id}")
-    public String updateUser(@PathVariable Long id) {
-        return "update user "+id;
+    public UserModel updateUser(@PathVariable Long id, @RequestBody UserModel user) {
+        return userService.update(id, user);
     }
 
     @DeleteMapping("/{id}")
-    public String deleteUser(@PathVariable Long id) {
-        return "delete user "+id;
+    public void deleteUser(@PathVariable Long id) {
+        userService.delete(id);
     }
 
     //========== CRUD for user's address ==========
