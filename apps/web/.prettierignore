@@ -1,0 +1,4 @@
+# Ignore artifacts:
+coverage
+routeTree.gen.ts
+dist

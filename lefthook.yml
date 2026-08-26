@@ -1,0 +1,21 @@
+# Refer for explanation to following link:
+# https://lefthook.dev/configuration/
+
+pre-push:
+  parallel: true
+  jobs:
+    - name: web lint
+      root: apps/web
+      run: bun run lint
+
+    - name: web prettier
+      root: apps/web
+      run: bun run format:check
+
+    - name: web build
+      root: apps/web
+      run: bun run build
+
+    - name: api verify
+      root: apps/api
+      run: ./mvnw --batch-mode --no-transfer-progress verify
