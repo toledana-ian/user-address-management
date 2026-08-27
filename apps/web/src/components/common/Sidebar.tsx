@@ -1,3 +1,4 @@
+import Box from "@mui/material/Box";
 import Drawer from "@mui/material/Drawer";
 import List from "@mui/material/List";
 import ListItemButton from "@mui/material/ListItemButton";
@@ -12,42 +13,73 @@ export const SIDEBAR_WIDTH = 260;
 
 const navItems = [{ label: "Users", to: "/", icon: <PeopleAltIcon /> }];
 
-const Sidebar = () => {
+const NavList = ({ onNavigate }: { onNavigate?: () => void }) => {
   const matchRoute = useMatchRoute();
-  const { isMobile, open, close } = useSidebar();
 
   return (
-    <Drawer
-      variant={isMobile ? "temporary" : "persistent"}
-      anchor="left"
-      open={open}
-      onClose={close}
-      ModalProps={isMobile ? { keepMounted: true } : undefined}
+    <List sx={{ width: SIDEBAR_WIDTH }}>
+      {navItems.map((item) => (
+        <ListItemButton
+          key={item.to}
+          component={Link}
+          to={item.to}
+          selected={!!matchRoute({ to: item.to, fuzzy: false })}
+          onClick={onNavigate}
+        >
+          <ListItemIcon>{item.icon}</ListItemIcon>
+          <ListItemText primary={item.label} />
+        </ListItemButton>
+      ))}
+    </List>
+  );
+};
+
+const Sidebar = () => {
+  const { isMobile, open, close } = useSidebar();
+
+  if (isMobile) {
+    return (
+      <Drawer
+        variant="temporary"
+        anchor="left"
+        open={open}
+        onClose={close}
+        ModalProps={{ keepMounted: true }}
+        sx={{
+          "& .MuiDrawer-paper": {
+            width: SIDEBAR_WIDTH,
+            boxSizing: "border-box",
+          },
+        }}
+      >
+        <Toolbar />
+        <NavList onNavigate={close} />
+      </Drawer>
+    );
+  }
+
+  return (
+    <Box
+      component="nav"
       sx={{
-        width: SIDEBAR_WIDTH,
+        width: open ? SIDEBAR_WIDTH : 0,
         flexShrink: 0,
-        "& .MuiDrawer-paper": {
-          width: SIDEBAR_WIDTH,
-          boxSizing: "border-box",
-        },
+        overflow: "hidden",
+        borderRight: open ? 1 : 0,
+        borderColor: "divider",
+        transition: (theme) =>
+          theme.transitions.create(["width", "border-color"], {
+            easing: open
+              ? theme.transitions.easing.easeOut
+              : theme.transitions.easing.sharp,
+            duration: open
+              ? theme.transitions.duration.enteringScreen
+              : theme.transitions.duration.leavingScreen,
+          }),
       }}
     >
-      <Toolbar />
-      <List>
-        {navItems.map((item) => (
-          <ListItemButton
-            key={item.to}
-            component={Link}
-            to={item.to}
-            selected={!!matchRoute({ to: item.to, fuzzy: false })}
-            onClick={isMobile ? close : undefined}
-          >
-            <ListItemIcon>{item.icon}</ListItemIcon>
-            <ListItemText primary={item.label} />
-          </ListItemButton>
-        ))}
-      </List>
-    </Drawer>
+      <NavList />
+    </Box>
   );
 };
 

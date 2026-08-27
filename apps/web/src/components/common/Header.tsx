@@ -6,31 +6,19 @@ import Typography from "@mui/material/Typography";
 import MenuIcon from "@mui/icons-material/Menu";
 import PeopleAltIcon from "@mui/icons-material/PeopleAlt";
 import { useSidebar } from "../../hooks/useSidebar";
-import { SIDEBAR_WIDTH } from "./Sidebar";
 
 const Header = () => {
-  const { isMobile, open, toggle } = useSidebar();
-  const shifted = !isMobile && open;
+  const { toggle } = useSidebar();
 
   return (
     <AppBar
-      position="fixed"
+      position="sticky"
       color="inherit"
       elevation={0}
       sx={{
         borderBottom: 1,
         borderColor: "divider",
-        width: shifted ? `calc(100% - ${SIDEBAR_WIDTH}px)` : "100%",
-        ml: shifted ? `${SIDEBAR_WIDTH}px` : 0,
-        transition: (theme) =>
-          theme.transitions.create(["width", "margin"], {
-            easing: shifted
-              ? theme.transitions.easing.easeOut
-              : theme.transitions.easing.sharp,
-            duration: shifted
-              ? theme.transitions.duration.enteringScreen
-              : theme.transitions.duration.leavingScreen,
-          }),
+        width: "100%",
       }}
     >
       <Toolbar>
