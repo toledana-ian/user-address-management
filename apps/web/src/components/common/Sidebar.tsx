@@ -65,6 +65,7 @@ const Sidebar = () => {
         width: open ? SIDEBAR_WIDTH : 0,
         flexShrink: 0,
         overflow: "hidden",
+        bgcolor: "background.paper",
         borderRight: open ? 1 : 0,
         borderColor: "divider",
         transition: (theme) =>

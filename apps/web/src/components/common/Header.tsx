@@ -16,6 +16,7 @@ const Header = () => {
       color="inherit"
       elevation={0}
       sx={{
+        bgcolor: "background.paper",
         borderBottom: 1,
         borderColor: "divider",
         width: "100%",
