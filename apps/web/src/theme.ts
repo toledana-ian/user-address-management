@@ -72,8 +72,13 @@ export const theme = createTheme({
       fontSize: 14,
       fontWeight: 400,
     },
+    body2: {
+      fontSize: 13,
+      fontWeight: 400,
+      lineHeight: "18px",
+    },
     pageTitle: {
-      fontSize: 25,
+      fontSize: 24,
       fontWeight: 700,
     },
     section: {
