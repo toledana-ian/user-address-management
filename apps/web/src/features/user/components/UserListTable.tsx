@@ -35,6 +35,10 @@ function formatAddress(user: User) {
 
 const HEAD_CELL_SX = { height: 44, py: 0, px: 2 };
 const BODY_CELL_SX = { height: 64, py: 0, px: 2 };
+const NO_TOOLTIP_TRANSITION = {
+  transition: { timeout: 0 },
+  popper: { modifiers: [{ name: "offset", options: { offset: [0, -4] } }] },
+};
 
 const UserListTable = ({ users, onDelete }: UserListTableProps) => {
   return (
@@ -109,7 +113,13 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                     gap: 0.5,
                   }}
                 >
-                  <Tooltip title="Edit" placement={"top"}>
+                  <Tooltip
+                    title="Edit"
+                    placement={"top"}
+                    slotProps={NO_TOOLTIP_TRANSITION}
+
+                    arrow
+                  >
                     <IconButton
                       size="small"
                       aria-label="Edit"
@@ -118,7 +128,12 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                       <EditOutlinedIcon sx={{ fontSize: 18 }} />
                     </IconButton>
                   </Tooltip>
-                  <Tooltip title="Delete" placement={"top"}>
+                  <Tooltip
+                    title="Delete"
+                    placement={"top"}
+                    slotProps={NO_TOOLTIP_TRANSITION}
+                    arrow
+                  >
                     <IconButton
                       size="small"
                       aria-label="Delete"
