@@ -1,6 +1,14 @@
 # Refer for explanation to following link:
 # https://lefthook.dev/configuration/
 
+pre-commit:
+  parallel: true
+  jobs:
+    - name: web format
+      root: apps/web
+      run: bun run format
+      stage_fixed: true
+
 pre-push:
   parallel: true
   jobs:
