@@ -4,7 +4,16 @@ import Alert from "@mui/material/Alert";
 import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
+import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
+import { deleteAddress } from "../../address/api/deleteAddress";
+import { setPrimaryAddress } from "../../address/api/setPrimaryAddress";
+import { updateAddress } from "../../address/api/updateAddress";
+import DeleteAddressDialog from "../../address/components/DeleteAddressDialog";
+import EditAddressDialog, {
+  type EditAddressFormValues,
+} from "../../address/components/EditAddressDialog";
+import type { Address } from "../../address/types";
 import { getUser } from "../api/getUser";
 import UserNotFound from "../components/UserNotFound";
 import type { User } from "../types";
@@ -23,6 +32,9 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
   const [isLoading, setIsLoading] = useState(true);
   const [fetchNotFound, setFetchNotFound] = useState(false);
   const [error, setError] = useState<string | null>(null);
+  const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
+  const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
+  const [actionError, setActionError] = useState<string | null>(null);
 
   useEffect(() => {
     if (!isValidId) {
@@ -74,11 +86,60 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
     return <Alert severity="error">{error ?? "Failed to load user."}</Alert>;
   }
 
+  const handleMakePrimary = async (address: Address) => {
+    try {
+      await setPrimaryAddress(user.id, address.id);
+      setUser(await getUser(user.id));
+    } catch {
+      setActionError("Failed to update primary address.");
+    }
+  };
+
+  const handleEditAddressSave = async (
+    address: Address,
+    values: EditAddressFormValues,
+  ) => {
+    await updateAddress(user.id, address.id, values);
+    setUser(await getUser(user.id));
+    setAddressToEdit(null);
+  };
+
+  const handleDeleteAddressConfirm = async (address: Address) => {
+    try {
+      await deleteAddress(user.id, address.id);
+      setUser(await getUser(user.id));
+      setAddressToDelete(null);
+    } catch {
+      setActionError("Failed to delete address.");
+    }
+  };
+
   return (
     <Stack spacing={3}>
       <UserProfileSection user={user} />
       <Divider />
-      <UserAddressesSection addresses={user.addresses} />
+      <UserAddressesSection
+        addresses={user.addresses}
+        onMakePrimary={handleMakePrimary}
+        onEdit={setAddressToEdit}
+        onDelete={setAddressToDelete}
+      />
+      <EditAddressDialog
+        address={addressToEdit}
+        onClose={() => setAddressToEdit(null)}
+        onSave={handleEditAddressSave}
+      />
+      <DeleteAddressDialog
+        address={addressToDelete}
+        onClose={() => setAddressToDelete(null)}
+        onConfirm={handleDeleteAddressConfirm}
+      />
+      <Snackbar
+        open={!!actionError}
+        autoHideDuration={4000}
+        onClose={() => setActionError(null)}
+        message={actionError}
+      />
     </Stack>
   );
 };

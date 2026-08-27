@@ -4,10 +4,14 @@ import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
 import Typography from "@mui/material/Typography";
+import AddressActionsMenu from "../../address/components/AddressActionsMenu";
 import type { Address } from "../../address/types";
 
 interface UserAddressesSectionProps {
   addresses: Address[];
+  onMakePrimary: (address: Address) => void;
+  onEdit: (address: Address) => void;
+  onDelete: (address: Address) => void;
 }
 
 function formatAddressLine(address: Address) {
@@ -22,7 +26,12 @@ function formatAddressLine(address: Address) {
     .join(", ");
 }
 
-const UserAddressesSection = ({ addresses }: UserAddressesSectionProps) => {
+const UserAddressesSection = ({
+  addresses,
+  onMakePrimary,
+  onEdit,
+  onDelete,
+}: UserAddressesSectionProps) => {
   return (
     <Box>
       <Typography variant="section" gutterBottom>
@@ -41,17 +50,30 @@ const UserAddressesSection = ({ addresses }: UserAddressesSectionProps) => {
               sx={{ p: 2, borderRadius: "8px" }}
             >
               <Box
-                sx={{ display: "flex", alignItems: "center", gap: 1, mb: 0.5 }}
+                sx={{
+                  display: "flex",
+                  alignItems: "center",
+                  justifyContent: "space-between",
+                  mb: 0.5,
+                }}
               >
-                <LocationOnOutlinedIcon
-                  sx={{ fontSize: 18, color: "text.secondary" }}
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <LocationOnOutlinedIcon
+                    sx={{ fontSize: 18, color: "text.secondary" }}
+                  />
+                  <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
+                    {address.label || "Address"}
+                  </Typography>
+                  {address.primary ? (
+                    <Chip label="Primary" size="small" color="primary" />
+                  ) : null}
+                </Box>
+                <AddressActionsMenu
+                  address={address}
+                  onMakePrimary={onMakePrimary}
+                  onEdit={onEdit}
+                  onDelete={onDelete}
                 />
-                <Typography sx={{ fontWeight: 600, fontSize: 14 }}>
-                  {address.label || "Address"}
-                </Typography>
-                {address.primary ? (
-                  <Chip label="Primary" size="small" color="primary" />
-                ) : null}
               </Box>
               <Typography
                 variant="body2"
