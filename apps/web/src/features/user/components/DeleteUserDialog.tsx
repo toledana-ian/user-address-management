@@ -34,7 +34,11 @@ const DeleteUserDialog = ({
   };
 
   return (
-    <Dialog open={!!user} onClose={onClose}>
+    <Dialog
+      open={!!user}
+      onClose={onClose}
+      transitionDuration={{ enter: 225, exit: 0 }}
+    >
       <DialogTitle>Delete user</DialogTitle>
       <DialogContent>
         <DialogContentText>
