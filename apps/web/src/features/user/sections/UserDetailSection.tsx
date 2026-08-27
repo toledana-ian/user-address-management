@@ -15,6 +15,10 @@ import EditAddressDialog, {
 } from "../../address/components/EditAddressDialog";
 import type { Address } from "../../address/types";
 import { getUser } from "../api/getUser";
+import { updateUser } from "../api/updateUser";
+import EditUserInfoDialog, {
+  type EditUserInfoFormValues,
+} from "../components/EditUserInfoDialog";
 import UserNotFound from "../components/UserNotFound";
 import type { User } from "../types";
 import UserAddressesSection from "./UserAddressesSection";
@@ -35,6 +39,7 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
   const [addressToEdit, setAddressToEdit] = useState<Address | null>(null);
   const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [isEditUserInfoOpen, setIsEditUserInfoOpen] = useState(false);
 
   useEffect(() => {
     if (!isValidId) {
@@ -86,6 +91,14 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
     return <Alert severity="error">{error ?? "Failed to load user."}</Alert>;
   }
 
+  const handleSaveUserInfo = async (
+    targetUser: User,
+    values: EditUserInfoFormValues,
+  ) => {
+    setUser(await updateUser(targetUser.id, values));
+    setIsEditUserInfoOpen(false);
+  };
+
   const handleMakePrimary = async (address: Address) => {
     try {
       await setPrimaryAddress(user.id, address.id);
@@ -116,13 +129,21 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
 
   return (
     <Stack spacing={3}>
-      <UserProfileSection user={user} />
+      <UserProfileSection
+        user={user}
+        onEdit={() => setIsEditUserInfoOpen(true)}
+      />
       <Divider />
       <UserAddressesSection
         addresses={user.addresses}
         onMakePrimary={handleMakePrimary}
         onEdit={setAddressToEdit}
         onDelete={setAddressToDelete}
+      />
+      <EditUserInfoDialog
+        user={isEditUserInfoOpen ? user : null}
+        onClose={() => setIsEditUserInfoOpen(false)}
+        onSave={handleSaveUserInfo}
       />
       <EditAddressDialog
         address={addressToEdit}
