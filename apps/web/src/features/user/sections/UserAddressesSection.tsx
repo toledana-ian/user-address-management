@@ -1,5 +1,7 @@
+import AddIcon from "@mui/icons-material/Add";
 import LocationOnOutlinedIcon from "@mui/icons-material/LocationOnOutlined";
 import Box from "@mui/material/Box";
+import Button from "@mui/material/Button";
 import Chip from "@mui/material/Chip";
 import Paper from "@mui/material/Paper";
 import Stack from "@mui/material/Stack";
@@ -12,6 +14,7 @@ interface UserAddressesSectionProps {
   onMakePrimary: (address: Address) => void;
   onEdit: (address: Address) => void;
   onDelete: (address: Address) => void;
+  onAdd: () => void;
 }
 
 function formatAddressLine(address: Address) {
@@ -31,18 +34,35 @@ const UserAddressesSection = ({
   onMakePrimary,
   onEdit,
   onDelete,
+  onAdd,
 }: UserAddressesSectionProps) => {
   return (
     <Box>
-      <Typography variant="section" gutterBottom>
-        Addresses
-      </Typography>
+      <Box
+        sx={{
+          display: "flex",
+          alignItems: "center",
+          justifyContent: "space-between",
+          gap: 1.5,
+          mb: 2,
+        }}
+      >
+        <Box>
+          <Typography variant="section">Addresses</Typography>
+          <Typography variant="body2" color="text.secondary">
+            Manage this user&apos;s saved addresses and primary location.
+          </Typography>
+        </Box>
+        <Button variant="outlined" startIcon={<AddIcon />} onClick={onAdd}>
+          Add address
+        </Button>
+      </Box>
       {addresses.length === 0 ? (
         <Typography variant="body2" color="text.secondary">
           This user has no addresses yet.
         </Typography>
       ) : (
-        <Stack spacing={1.5} sx={{ mt: 1 }}>
+        <Stack spacing={1.5}>
           {addresses.map((address) => (
             <Paper
               key={address.id}

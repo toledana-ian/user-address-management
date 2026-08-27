@@ -6,9 +6,12 @@ import CircularProgress from "@mui/material/CircularProgress";
 import Divider from "@mui/material/Divider";
 import Snackbar from "@mui/material/Snackbar";
 import Stack from "@mui/material/Stack";
+import { createAddress } from "../../address/api/createAddress";
+import type { CreateAddressPayload } from "../../address/api/createAddress";
 import { deleteAddress } from "../../address/api/deleteAddress";
 import { setPrimaryAddress } from "../../address/api/setPrimaryAddress";
 import { updateAddress } from "../../address/api/updateAddress";
+import AddAddressDialog from "../../address/components/AddAddressDialog";
 import DeleteAddressDialog from "../../address/components/DeleteAddressDialog";
 import EditAddressDialog, {
   type EditAddressFormValues,
@@ -40,6 +43,7 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
   const [addressToDelete, setAddressToDelete] = useState<Address | null>(null);
   const [actionError, setActionError] = useState<string | null>(null);
   const [isEditUserInfoOpen, setIsEditUserInfoOpen] = useState(false);
+  const [isAddAddressOpen, setIsAddAddressOpen] = useState(false);
 
   useEffect(() => {
     if (!isValidId) {
@@ -127,6 +131,12 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
     }
   };
 
+  const handleAddAddressSave = async (values: CreateAddressPayload) => {
+    await createAddress(user.id, values);
+    setUser(await getUser(user.id));
+    setIsAddAddressOpen(false);
+  };
+
   return (
     <Stack spacing={3}>
       <UserProfileSection
@@ -139,6 +149,12 @@ const UserDetailSection = ({ id }: UserDetailSectionProps) => {
         onMakePrimary={handleMakePrimary}
         onEdit={setAddressToEdit}
         onDelete={setAddressToDelete}
+        onAdd={() => setIsAddAddressOpen(true)}
+      />
+      <AddAddressDialog
+        open={isAddAddressOpen}
+        onClose={() => setIsAddAddressOpen(false)}
+        onSave={handleAddAddressSave}
       />
       <EditUserInfoDialog
         user={isEditUserInfoOpen ? user : null}
