@@ -110,15 +110,13 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                   }}
                 >
                   <Tooltip title="Edit" placement={"top"}>
-                    <span>
-                      <IconButton
-                        size="small"
-                        aria-label="Edit"
-                        sx={{ width: 32, height: 32 }}
-                      >
-                        <EditOutlinedIcon sx={{ fontSize: 18 }} />
-                      </IconButton>
-                    </span>
+                    <IconButton
+                      size="small"
+                      aria-label="Edit"
+                      sx={{ width: 32, height: 32 }}
+                    >
+                      <EditOutlinedIcon sx={{ fontSize: 18 }} />
+                    </IconButton>
                   </Tooltip>
                   <Tooltip title="Delete" placement={"top"}>
                     <IconButton
