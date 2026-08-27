@@ -4,10 +4,16 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
+import { createAddress } from "../../address/api/createAddress";
 import { setPrimaryAddress } from "../../address/api/setPrimaryAddress";
+import { createUser } from "../api/createUser";
 import { deleteUser } from "../api/deleteUser";
 import { getUsers } from "../api/getUsers";
 import { updateUser } from "../api/updateUser";
+import AddUserDialog, {
+  type AddUserAddressValues,
+  type AddUserFormValues,
+} from "../components/AddUserDialog";
 import DeleteUserDialog from "../components/DeleteUserDialog";
 import EditUserDialog, {
   type EditUserFormValues,
@@ -40,6 +46,7 @@ const UserListSection = () => {
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
 
   useEffect(() => {
     let isMounted = true;
@@ -116,6 +123,16 @@ const UserListSection = () => {
     setUserToEdit(null);
   };
 
+  const handleAddUserSave = async (
+    values: AddUserFormValues,
+    address: AddUserAddressValues,
+  ) => {
+    const newUser = await createUser(values);
+    const newAddress = await createAddress(newUser.id, address);
+    setUsers((prev) => [...prev, { ...newUser, addresses: [newAddress] }]);
+    setIsAddUserOpen(false);
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
@@ -130,7 +147,11 @@ const UserListSection = () => {
 
   return (
     <>
-      <UsersPageHeader search={search} onSearchChange={setSearch} />
+      <UsersPageHeader
+        search={search}
+        onSearchChange={setSearch}
+        onAddUser={() => setIsAddUserOpen(true)}
+      />
       <Paper
         variant="outlined"
         sx={{ borderRadius: "8px", overflow: "hidden" }}
@@ -158,6 +179,11 @@ const UserListSection = () => {
         user={userToEdit}
         onClose={() => setUserToEdit(null)}
         onSave={handleEditSave}
+      />
+      <AddUserDialog
+        open={isAddUserOpen}
+        onClose={() => setIsAddUserOpen(false)}
+        onSave={handleAddUserSave}
       />
       <Snackbar
         open={!!deleteError}
