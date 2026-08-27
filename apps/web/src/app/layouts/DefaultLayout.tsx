@@ -11,9 +11,9 @@ const DefaultLayout = () => {
         sx={{ display: "flex", flexDirection: "column", minHeight: "100vh" }}
       >
         <Header />
-        <Box sx={{ display: "flex", flex: 1 }}>
+        <Box sx={{ display: "flex", flex: 1, minWidth: 0 }}>
           <Sidebar />
-          <Box component="main" sx={{ flexGrow: 1, p: 3 }}>
+          <Box component="main" sx={{ flexGrow: 1, minWidth: 0 }}>
             <Outlet />
           </Box>
         </Box>
