@@ -2,7 +2,7 @@ import Box from "@mui/material/Box";
 import { Outlet } from "@tanstack/react-router";
 import Header from "../../components/common/Header";
 import Sidebar from "../../components/common/Sidebar";
-import { SidebarProvider } from "../../hooks/useSidebar";
+import { SidebarProvider } from "../providers/SidebarProvider";
 
 const DefaultLayout = () => {
   return (
