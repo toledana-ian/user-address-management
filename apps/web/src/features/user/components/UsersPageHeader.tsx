@@ -64,7 +64,7 @@ const UsersPageHeader = ({ search, onSearchChange }: UsersPageHeaderProps) => {
             },
           }}
           sx={{
-            width: { xs: "100%", sm: 260 },
+            width: { xs: "100%", sm: 200 },
             "& .MuiInputBase-root": { height: 40 },
           }}
         />
