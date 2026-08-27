@@ -10,28 +10,23 @@ import TableBody from "@mui/material/TableBody";
 import TableCell from "@mui/material/TableCell";
 import TableHead from "@mui/material/TableHead";
 import TableRow from "@mui/material/TableRow";
+import TableSortLabel from "@mui/material/TableSortLabel";
 import Tooltip from "@mui/material/Tooltip";
 import Typography from "@mui/material/Typography";
 import { stringAvatar } from "../../../lib/stringAvatar";
 import type { User } from "../types";
+import { formatAddress } from "../utils/formatAddress";
+
+export type UserSortField = "name" | "address";
+export type SortDirection = "asc" | "desc";
 
 interface UserListTableProps {
   users: User[];
+  sortField: UserSortField | null;
+  sortDirection: SortDirection;
+  onSort: (field: UserSortField) => void;
   onEdit: (user: User) => void;
   onDelete: (user: User) => void;
-}
-
-function formatAddress(user: User) {
-  const address =
-    user.addresses.find((candidate) => candidate.primary) ?? user.addresses[0];
-
-  if (!address) {
-    return "-";
-  }
-
-  return [address.street, address.city, address.state, address.postalCode]
-    .filter(Boolean)
-    .join(", ");
 }
 
 const HEAD_CELL_SX = { height: 44, py: 0, px: 2 };
@@ -41,15 +36,36 @@ const NO_TOOLTIP_TRANSITION = {
   popper: { modifiers: [{ name: "offset", options: { offset: [0, -4] } }] },
 };
 
-const UserListTable = ({ users, onEdit, onDelete }: UserListTableProps) => {
+const UserListTable = ({
+  users,
+  sortField,
+  sortDirection,
+  onSort,
+  onEdit,
+  onDelete,
+}: UserListTableProps) => {
   return (
     <Table sx={{ fontSize: 14 }}>
       <TableHead>
         <TableRow>
           <TableCell colSpan={2} sx={HEAD_CELL_SX}>
-            Name
+            <TableSortLabel
+              active={sortField === "name"}
+              direction={sortField === "name" ? sortDirection : "asc"}
+              onClick={() => onSort("name")}
+            >
+              Name
+            </TableSortLabel>
           </TableCell>
-          <TableCell sx={HEAD_CELL_SX}>Primary Address</TableCell>
+          <TableCell sx={HEAD_CELL_SX}>
+            <TableSortLabel
+              active={sortField === "address"}
+              direction={sortField === "address" ? sortDirection : "asc"}
+              onClick={() => onSort("address")}
+            >
+              Primary Address
+            </TableSortLabel>
+          </TableCell>
           <TableCell sx={{ ...HEAD_CELL_SX, width: 80, textAlign: "center" }}>
             Action
           </TableCell>

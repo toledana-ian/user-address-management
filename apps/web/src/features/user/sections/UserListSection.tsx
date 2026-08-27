@@ -18,10 +18,14 @@ import DeleteUserDialog from "../components/DeleteUserDialog";
 import EditUserDialog, {
   type EditUserFormValues,
 } from "../components/EditUserDialog";
-import UserListTable from "../components/UserListTable";
+import UserListTable, {
+  type SortDirection,
+  type UserSortField,
+} from "../components/UserListTable";
 import UserTableToolbar from "../components/UserTableToolbar";
 import UsersPageHeader from "../components/UsersPageHeader";
 import type { User } from "../types";
+import { formatAddress } from "../utils/formatAddress";
 
 const PAGE_SIZE = 10;
 
@@ -47,6 +51,8 @@ const UserListSection = () => {
   const [deleteError, setDeleteError] = useState<string | null>(null);
   const [userToEdit, setUserToEdit] = useState<User | null>(null);
   const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [sortField, setSortField] = useState<UserSortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   useEffect(() => {
     let isMounted = true;
@@ -78,21 +84,51 @@ const UserListSection = () => {
     [users, search],
   );
 
+  const sortedUsers = useMemo(() => {
+    if (!sortField) {
+      return filteredUsers;
+    }
+
+    const sorted = [...filteredUsers].sort((a, b) => {
+      const aValue =
+        sortField === "name"
+          ? `${a.firstName} ${a.lastName}`
+          : formatAddress(a);
+      const bValue =
+        sortField === "name"
+          ? `${b.firstName} ${b.lastName}`
+          : formatAddress(b);
+      return aValue.localeCompare(bValue);
+    });
+
+    return sortDirection === "asc" ? sorted : sorted.reverse();
+  }, [filteredUsers, sortField, sortDirection]);
+
   const [appliedSearch, setAppliedSearch] = useState(search);
   if (appliedSearch !== search) {
     setAppliedSearch(search);
     setPage(1);
   }
 
-  const pageCount = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const handleSort = (field: UserSortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setPage(1);
+  };
+
+  const pageCount = Math.max(1, Math.ceil(sortedUsers.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const pagedUsers = filteredUsers.slice(
+  const pagedUsers = sortedUsers.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
   const rangeStart =
-    filteredUsers.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
-  const rangeEnd = Math.min(currentPage * PAGE_SIZE, filteredUsers.length);
+    sortedUsers.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const rangeEnd = Math.min(currentPage * PAGE_SIZE, sortedUsers.length);
 
   const handleDeleteConfirm = async (user: User) => {
     try {
@@ -158,6 +194,9 @@ const UserListSection = () => {
       >
         <UserListTable
           users={pagedUsers}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
           onEdit={setUserToEdit}
           onDelete={setUserToDelete}
         />
@@ -167,7 +206,7 @@ const UserListSection = () => {
           onPageChange={setPage}
           rangeStart={rangeStart}
           rangeEnd={rangeEnd}
-          total={filteredUsers.length}
+          total={sortedUsers.length}
         />
       </Paper>
       <DeleteUserDialog
