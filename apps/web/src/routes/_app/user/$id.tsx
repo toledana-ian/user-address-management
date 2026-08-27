@@ -4,7 +4,7 @@ import Button from "@mui/material/Button";
 import Container from "@mui/material/Container";
 import Typography from "@mui/material/Typography";
 
-export const Route = createFileRoute("/user/$id")({
+export const Route = createFileRoute("/_app/user/$id")({
   component: UserDetailPage,
 });
 
