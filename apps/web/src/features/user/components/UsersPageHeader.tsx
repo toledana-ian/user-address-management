@@ -16,15 +16,26 @@ const UsersPageHeader = ({ search, onSearchChange }: UsersPageHeaderProps) => {
     <Box
       sx={{
         display: "flex",
-        flexWrap: "wrap",
+        flexDirection: { xs: "column", md: "row" },
         alignItems: "center",
         justifyContent: "space-between",
         gap: 1.5,
         mb: "15px",
       }}
     >
-      <Box>
-        <Typography variant="pageTitle">Users</Typography>
+      <Box
+        sx={{
+          display: "flex",
+          flexDirection: "column",
+          justifyContent: "center",
+        }}
+      >
+        <Typography
+          variant="pageTitle"
+          sx={{ textAlign: { xs: "center", md: "left" } }}
+        >
+          Users
+        </Typography>
         <Typography variant="body1" color="text.secondary">
           Manage your users and their addresses.
         </Typography>
