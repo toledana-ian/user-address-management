@@ -31,6 +31,8 @@ interface EditUserDialogProps {
   ) => Promise<void>;
 }
 
+const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 function formatAddressOption(address: Address) {
   const parts = [
     address.street,
@@ -72,8 +74,11 @@ const EditUserForm = ({
   );
   const [error, setError] = useState<string | null>(null);
 
+  const trimmedEmail = email.trim();
+  const isEmailValid = EMAIL_REGEX.test(trimmedEmail);
+  const showEmailError = trimmedEmail !== "" && !isEmailValid;
   const isValid =
-    firstName.trim() !== "" && lastName.trim() !== "" && email.trim() !== "";
+    firstName.trim() !== "" && lastName.trim() !== "" && isEmailValid;
 
   const handleClose = () => {
     if (isSaving) {
@@ -95,7 +100,7 @@ const EditUserForm = ({
         {
           firstName: firstName.trim(),
           lastName: lastName.trim(),
-          email: email.trim(),
+          email: trimmedEmail,
         },
         primaryAddressId,
       );
@@ -136,6 +141,10 @@ const EditUserForm = ({
             size="small"
             fullWidth
             disabled={isSaving}
+            error={showEmailError}
+            helperText={
+              showEmailError ? "Enter a valid email address." : undefined
+            }
           />
 
           <Divider />
