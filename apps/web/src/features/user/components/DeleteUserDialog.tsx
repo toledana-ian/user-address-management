@@ -1,5 +1,6 @@
 import { useState } from "react";
 import Button from "@mui/material/Button";
+import CircularProgress from "@mui/material/CircularProgress";
 import Dialog from "@mui/material/Dialog";
 import DialogActions from "@mui/material/DialogActions";
 import DialogContent from "@mui/material/DialogContent";
@@ -21,7 +22,7 @@ const DeleteUserDialog = ({
   const [isDeleting, setIsDeleting] = useState(false);
 
   const handleConfirm = async () => {
-    if (!user) {
+    if (!user || isDeleting) {
       return;
     }
 
@@ -33,10 +34,17 @@ const DeleteUserDialog = ({
     }
   };
 
+  const handleClose = () => {
+    if (isDeleting) {
+      return;
+    }
+    onClose();
+  };
+
   return (
     <Dialog
       open={!!user}
-      onClose={onClose}
+      onClose={handleClose}
       transitionDuration={{ enter: 225, exit: 0 }}
     >
       <DialogTitle>Delete user</DialogTitle>
@@ -48,7 +56,7 @@ const DeleteUserDialog = ({
         </DialogContentText>
       </DialogContent>
       <DialogActions>
-        <Button onClick={onClose} disabled={isDeleting}>
+        <Button onClick={handleClose} disabled={isDeleting}>
           Cancel
         </Button>
         <Button
@@ -56,8 +64,13 @@ const DeleteUserDialog = ({
           variant="contained"
           onClick={handleConfirm}
           disabled={isDeleting}
+          startIcon={
+            isDeleting ? (
+              <CircularProgress size={16} color="inherit" />
+            ) : undefined
+          }
         >
-          Delete
+          {isDeleting ? "Deleting…" : "Delete"}
         </Button>
       </DialogActions>
     </Dialog>
