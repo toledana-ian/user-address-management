@@ -9,9 +9,14 @@ import Typography from "@mui/material/Typography";
 interface UsersPageHeaderProps {
   search: string;
   onSearchChange: (value: string) => void;
+  onAddUser: () => void;
 }
 
-const UsersPageHeader = ({ search, onSearchChange }: UsersPageHeaderProps) => {
+const UsersPageHeader = ({
+  search,
+  onSearchChange,
+  onAddUser,
+}: UsersPageHeaderProps) => {
   return (
     <Box
       sx={{
@@ -71,6 +76,7 @@ const UsersPageHeader = ({ search, onSearchChange }: UsersPageHeaderProps) => {
         <Button
           variant="contained"
           startIcon={<AddIcon />}
+          onClick={onAddUser}
           sx={{
             height: 40,
             px: 2,

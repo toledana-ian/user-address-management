@@ -4,13 +4,28 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
+import { createAddress } from "../../address/api/createAddress";
+import { setPrimaryAddress } from "../../address/api/setPrimaryAddress";
+import { createUser } from "../api/createUser";
 import { deleteUser } from "../api/deleteUser";
 import { getUsers } from "../api/getUsers";
+import { updateUser } from "../api/updateUser";
+import AddUserDialog, {
+  type AddUserAddressValues,
+  type AddUserFormValues,
+} from "../components/AddUserDialog";
 import DeleteUserDialog from "../components/DeleteUserDialog";
-import UserListTable from "../components/UserListTable";
+import EditUserDialog, {
+  type EditUserFormValues,
+} from "../components/EditUserDialog";
+import UserListTable, {
+  type SortDirection,
+  type UserSortField,
+} from "../components/UserListTable";
 import UserTableToolbar from "../components/UserTableToolbar";
 import UsersPageHeader from "../components/UsersPageHeader";
 import type { User } from "../types";
+import { formatAddress } from "../utils/formatAddress";
 
 const PAGE_SIZE = 10;
 
@@ -34,6 +49,10 @@ const UserListSection = () => {
   const [page, setPage] = useState(1);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
+  const [isAddUserOpen, setIsAddUserOpen] = useState(false);
+  const [sortField, setSortField] = useState<UserSortField | null>(null);
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   useEffect(() => {
     let isMounted = true;
@@ -65,21 +84,51 @@ const UserListSection = () => {
     [users, search],
   );
 
+  const sortedUsers = useMemo(() => {
+    if (!sortField) {
+      return filteredUsers;
+    }
+
+    const sorted = [...filteredUsers].sort((a, b) => {
+      const aValue =
+        sortField === "name"
+          ? `${a.firstName} ${a.lastName}`
+          : formatAddress(a);
+      const bValue =
+        sortField === "name"
+          ? `${b.firstName} ${b.lastName}`
+          : formatAddress(b);
+      return aValue.localeCompare(bValue);
+    });
+
+    return sortDirection === "asc" ? sorted : sorted.reverse();
+  }, [filteredUsers, sortField, sortDirection]);
+
   const [appliedSearch, setAppliedSearch] = useState(search);
   if (appliedSearch !== search) {
     setAppliedSearch(search);
     setPage(1);
   }
 
-  const pageCount = Math.max(1, Math.ceil(filteredUsers.length / PAGE_SIZE));
+  const handleSort = (field: UserSortField) => {
+    if (sortField === field) {
+      setSortDirection((prev) => (prev === "asc" ? "desc" : "asc"));
+    } else {
+      setSortField(field);
+      setSortDirection("asc");
+    }
+    setPage(1);
+  };
+
+  const pageCount = Math.max(1, Math.ceil(sortedUsers.length / PAGE_SIZE));
   const currentPage = Math.min(page, pageCount);
-  const pagedUsers = filteredUsers.slice(
+  const pagedUsers = sortedUsers.slice(
     (currentPage - 1) * PAGE_SIZE,
     currentPage * PAGE_SIZE,
   );
   const rangeStart =
-    filteredUsers.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
-  const rangeEnd = Math.min(currentPage * PAGE_SIZE, filteredUsers.length);
+    sortedUsers.length === 0 ? 0 : (currentPage - 1) * PAGE_SIZE + 1;
+  const rangeEnd = Math.min(currentPage * PAGE_SIZE, sortedUsers.length);
 
   const handleDeleteConfirm = async (user: User) => {
     try {
@@ -89,6 +138,35 @@ const UserListSection = () => {
     } catch {
       setDeleteError("Failed to delete user.");
     }
+  };
+
+  const handleEditSave = async (
+    user: User,
+    values: EditUserFormValues,
+    primaryAddressId: number | null,
+  ) => {
+    const currentPrimary = user.addresses.find((address) => address.primary);
+    if (primaryAddressId !== null && primaryAddressId !== currentPrimary?.id) {
+      await setPrimaryAddress(user.id, primaryAddressId);
+    }
+
+    const updatedUser = await updateUser(user.id, values);
+    setUsers((prev) =>
+      prev.map((candidate) =>
+        candidate.id === user.id ? updatedUser : candidate,
+      ),
+    );
+    setUserToEdit(null);
+  };
+
+  const handleAddUserSave = async (
+    values: AddUserFormValues,
+    address: AddUserAddressValues,
+  ) => {
+    const newUser = await createUser(values);
+    const newAddress = await createAddress(newUser.id, address);
+    setUsers((prev) => [...prev, { ...newUser, addresses: [newAddress] }]);
+    setIsAddUserOpen(false);
   };
 
   if (isLoading) {
@@ -105,25 +183,46 @@ const UserListSection = () => {
 
   return (
     <>
-      <UsersPageHeader search={search} onSearchChange={setSearch} />
+      <UsersPageHeader
+        search={search}
+        onSearchChange={setSearch}
+        onAddUser={() => setIsAddUserOpen(true)}
+      />
       <Paper
         variant="outlined"
         sx={{ borderRadius: "8px", overflow: "hidden" }}
       >
-        <UserListTable users={pagedUsers} onDelete={setUserToDelete} />
+        <UserListTable
+          users={pagedUsers}
+          sortField={sortField}
+          sortDirection={sortDirection}
+          onSort={handleSort}
+          onEdit={setUserToEdit}
+          onDelete={setUserToDelete}
+        />
         <UserTableToolbar
           page={currentPage}
           pageCount={pageCount}
           onPageChange={setPage}
           rangeStart={rangeStart}
           rangeEnd={rangeEnd}
-          total={filteredUsers.length}
+          total={sortedUsers.length}
         />
       </Paper>
       <DeleteUserDialog
         user={userToDelete}
         onClose={() => setUserToDelete(null)}
         onConfirm={handleDeleteConfirm}
+      />
+      <EditUserDialog
+        user={userToEdit}
+        onClose={() => setUserToEdit(null)}
+        onSave={handleEditSave}
+      />
+      <AddUserDialog
+        open={isAddUserOpen}
+        onClose={() => setIsAddUserOpen(false)}
+        onSave={handleAddUserSave}
       />
       <Snackbar
         open={!!deleteError}
