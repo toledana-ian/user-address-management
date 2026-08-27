@@ -17,6 +17,7 @@ import type { User } from "../types";
 
 interface UserListTableProps {
   users: User[];
+  onEdit: (user: User) => void;
   onDelete: (user: User) => void;
 }
 
@@ -40,7 +41,7 @@ const NO_TOOLTIP_TRANSITION = {
   popper: { modifiers: [{ name: "offset", options: { offset: [0, -4] } }] },
 };
 
-const UserListTable = ({ users, onDelete }: UserListTableProps) => {
+const UserListTable = ({ users, onEdit, onDelete }: UserListTableProps) => {
   return (
     <Table sx={{ fontSize: 14 }}>
       <TableHead>
@@ -124,6 +125,7 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                       size="small"
                       aria-label="Edit"
                       sx={{ width: 32, height: 32 }}
+                      onClick={() => onEdit(user)}
                     >
                       <EditOutlinedIcon sx={{ fontSize: 18 }} />
                     </IconButton>

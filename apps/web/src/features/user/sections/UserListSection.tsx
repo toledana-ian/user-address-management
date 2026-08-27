@@ -4,9 +4,14 @@ import Box from "@mui/material/Box";
 import CircularProgress from "@mui/material/CircularProgress";
 import Paper from "@mui/material/Paper";
 import Snackbar from "@mui/material/Snackbar";
+import { setPrimaryAddress } from "../../address/api/setPrimaryAddress";
 import { deleteUser } from "../api/deleteUser";
 import { getUsers } from "../api/getUsers";
+import { updateUser } from "../api/updateUser";
 import DeleteUserDialog from "../components/DeleteUserDialog";
+import EditUserDialog, {
+  type EditUserFormValues,
+} from "../components/EditUserDialog";
 import UserListTable from "../components/UserListTable";
 import UserTableToolbar from "../components/UserTableToolbar";
 import UsersPageHeader from "../components/UsersPageHeader";
@@ -34,6 +39,7 @@ const UserListSection = () => {
   const [page, setPage] = useState(1);
   const [userToDelete, setUserToDelete] = useState<User | null>(null);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+  const [userToEdit, setUserToEdit] = useState<User | null>(null);
 
   useEffect(() => {
     let isMounted = true;
@@ -91,6 +97,25 @@ const UserListSection = () => {
     }
   };
 
+  const handleEditSave = async (
+    user: User,
+    values: EditUserFormValues,
+    primaryAddressId: number | null,
+  ) => {
+    const currentPrimary = user.addresses.find((address) => address.primary);
+    if (primaryAddressId !== null && primaryAddressId !== currentPrimary?.id) {
+      await setPrimaryAddress(user.id, primaryAddressId);
+    }
+
+    const updatedUser = await updateUser(user.id, values);
+    setUsers((prev) =>
+      prev.map((candidate) =>
+        candidate.id === user.id ? updatedUser : candidate,
+      ),
+    );
+    setUserToEdit(null);
+  };
+
   if (isLoading) {
     return (
       <Box sx={{ display: "flex", justifyContent: "center", py: 4 }}>
@@ -110,7 +135,11 @@ const UserListSection = () => {
         variant="outlined"
         sx={{ borderRadius: "8px", overflow: "hidden" }}
       >
-        <UserListTable users={pagedUsers} onDelete={setUserToDelete} />
+        <UserListTable
+          users={pagedUsers}
+          onEdit={setUserToEdit}
+          onDelete={setUserToDelete}
+        />
         <UserTableToolbar
           page={currentPage}
           pageCount={pageCount}
@@ -124,6 +153,11 @@ const UserListSection = () => {
         user={userToDelete}
         onClose={() => setUserToDelete(null)}
         onConfirm={handleDeleteConfirm}
+      />
+      <EditUserDialog
+        user={userToEdit}
+        onClose={() => setUserToEdit(null)}
+        onSave={handleEditSave}
       />
       <Snackbar
         open={!!deleteError}
