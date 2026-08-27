@@ -41,7 +41,9 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
     <Table sx={{ fontSize: 14 }}>
       <TableHead>
         <TableRow>
-          <TableCell sx={{ ...HEAD_CELL_SX, columnSpan: 2 }}>Name</TableCell>
+          <TableCell colSpan={2} sx={HEAD_CELL_SX}>
+            Name
+          </TableCell>
           <TableCell sx={HEAD_CELL_SX}>Address</TableCell>
           <TableCell sx={{ ...HEAD_CELL_SX, width: 80 }}>Action</TableCell>
         </TableRow>
@@ -54,7 +56,7 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
 
           return (
             <TableRow key={user.id} hover>
-              <TableCell sx={{ ...BODY_CELL_SX, width: 64 }}>
+              <TableCell sx={{ ...BODY_CELL_SX, width: 0, pr: 0 }}>
                 <Avatar
                   {...avatar}
                   sx={{ ...avatar.sx, width: 36, height: 36, fontSize: 14 }}
