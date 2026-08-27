@@ -21,7 +21,7 @@ function UserDetailPage() {
       >
         Back to users
       </Button>
-      <Typography variant="h4" component="h1" gutterBottom>
+      <Typography variant="pageTitle" gutterBottom>
         User {id}
       </Typography>
     </Container>

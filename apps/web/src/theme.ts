@@ -1,4 +1,5 @@
 import { createTheme } from "@mui/material/styles";
+import type { CSSProperties } from "react";
 
 declare module "@mui/material/styles" {
   interface Palette {
@@ -14,6 +15,31 @@ declare module "@mui/material/styles" {
       tint2: string;
       link: string;
     };
+  }
+
+  interface TypographyVariants {
+    pageTitle: CSSProperties;
+    section: CSSProperties;
+    label: CSSProperties;
+    micro: CSSProperties;
+    metric: CSSProperties;
+  }
+  interface TypographyVariantsOptions {
+    pageTitle?: CSSProperties;
+    section?: CSSProperties;
+    label?: CSSProperties;
+    micro?: CSSProperties;
+    metric?: CSSProperties;
+  }
+}
+
+declare module "@mui/material/Typography" {
+  interface TypographyPropsVariantOverrides {
+    pageTitle: true;
+    section: true;
+    label: true;
+    micro: true;
+    metric: true;
   }
 }
 
@@ -41,7 +67,47 @@ export const theme = createTheme({
       link: "#0C7373",
     },
   },
+  typography: {
+    body1: {
+      fontSize: 14,
+      fontWeight: 400,
+    },
+    pageTitle: {
+      fontSize: 25,
+      fontWeight: 700,
+    },
+    section: {
+      fontSize: 15,
+      fontWeight: 600,
+    },
+    label: {
+      fontSize: 12.5,
+      fontWeight: 600,
+    },
+    micro: {
+      fontSize: 11,
+      fontWeight: 600,
+      textTransform: "uppercase",
+      letterSpacing: "0.05em",
+    },
+    metric: {
+      fontSize: 26,
+      fontWeight: 700,
+      fontVariantNumeric: "tabular-nums",
+    },
+  },
   components: {
+    MuiTypography: {
+      defaultProps: {
+        variantMapping: {
+          pageTitle: "h1",
+          section: "h2",
+          label: "span",
+          micro: "span",
+          metric: "div",
+        },
+      },
+    },
     MuiLink: {
       styleOverrides: {
         root: ({ theme }) => ({
