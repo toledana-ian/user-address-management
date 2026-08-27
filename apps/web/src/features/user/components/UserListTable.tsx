@@ -44,8 +44,10 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
           <TableCell colSpan={2} sx={HEAD_CELL_SX}>
             Name
           </TableCell>
-          <TableCell sx={HEAD_CELL_SX}>Address</TableCell>
-          <TableCell sx={{ ...HEAD_CELL_SX, width: 80 }}>Action</TableCell>
+          <TableCell sx={HEAD_CELL_SX}>Primary Address</TableCell>
+          <TableCell sx={{ ...HEAD_CELL_SX, width: 80, textAlign: "center" }}>
+            Action
+          </TableCell>
         </TableRow>
       </TableHead>
       <TableBody>
@@ -62,7 +64,7 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                   sx={{ ...avatar.sx, width: 36, height: 36, fontSize: 14 }}
                 />
               </TableCell>
-              <TableCell sx={BODY_CELL_SX}>
+              <TableCell sx={{ ...BODY_CELL_SX }}>
                 <Box
                   sx={{
                     display: "flex",
@@ -91,19 +93,15 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                   </Typography>
                 </Box>
               </TableCell>
-              <TableCell sx={{ ...BODY_CELL_SX, maxWidth: 280 }}>
-                <Tooltip title={address}>
-                  <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
-                    <LocationOnOutlinedIcon
-                      sx={{ fontSize: 16, color: "text.secondary" }}
-                    />
-                    <Typography sx={{ fontSize: 14 }} noWrap>
-                      {address}
-                    </Typography>
-                  </Box>
-                </Tooltip>
+              <TableCell sx={{ ...BODY_CELL_SX, minWidth: 200 }}>
+                <Box sx={{ display: "flex", alignItems: "center", gap: 1 }}>
+                  <LocationOnOutlinedIcon
+                    sx={{ fontSize: 16, color: "text.secondary" }}
+                  />
+                  <Typography sx={{ fontSize: 14 }}>{address}</Typography>
+                </Box>
               </TableCell>
-              <TableCell sx={BODY_CELL_SX} align="right">
+              <TableCell sx={BODY_CELL_SX} align="center">
                 <Box
                   sx={{
                     display: "flex",
@@ -111,19 +109,18 @@ const UserListTable = ({ users, onDelete }: UserListTableProps) => {
                     gap: 0.5,
                   }}
                 >
-                  <Tooltip title="Coming soon">
+                  <Tooltip title="Edit" placement={"top"}>
                     <span>
                       <IconButton
                         size="small"
                         aria-label="Edit"
-                        disabled
                         sx={{ width: 32, height: 32 }}
                       >
                         <EditOutlinedIcon sx={{ fontSize: 18 }} />
                       </IconButton>
                     </span>
                   </Tooltip>
-                  <Tooltip title="Delete">
+                  <Tooltip title="Delete" placement={"top"}>
                     <IconButton
                       size="small"
                       aria-label="Delete"
