@@ -4,7 +4,7 @@ A small admin tool for viewing and modifying user profiles and their addresses. 
 
 | Users list | User detail |
 | --- | --- |
-| ![Users list page](docs/images/home.png) | ![User detail page](docs/images/user.png) |
+| <img alt="image" src="https://github.com/user-attachments/assets/bfea591e-f640-41cc-b574-05db7bcdf845" /> | <img alt="image" src="https://github.com/user-attachments/assets/ab9aab54-4065-43b1-b265-df81cc22e3b5" /> |
 
 ## Stack
 
