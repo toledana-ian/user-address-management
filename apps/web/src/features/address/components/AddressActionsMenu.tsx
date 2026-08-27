@@ -65,15 +65,17 @@ const AddressActionsMenu = ({
           </ListItemIcon>
           <ListItemText>Edit</ListItemText>
         </MenuItem>
-        <MenuItem
-          onClick={() => handleAction(onDelete)}
-          sx={{ color: "error.main" }}
-        >
-          <ListItemIcon>
-            <DeleteOutlineIcon fontSize="small" color="error" />
-          </ListItemIcon>
-          <ListItemText>Delete</ListItemText>
-        </MenuItem>
+        {!address.primary ? (
+          <MenuItem
+            onClick={() => handleAction(onDelete)}
+            sx={{ color: "error.main" }}
+          >
+            <ListItemIcon>
+              <DeleteOutlineIcon fontSize="small" color="error" />
+            </ListItemIcon>
+            <ListItemText>Delete</ListItemText>
+          </MenuItem>
+        ) : null}
       </Menu>
     </>
   );
